@@ -32,12 +32,24 @@ gateways that the AI must respect before producing final reports.
 
 ---
 
+## Skills at a Glance
+
+| Skill | 用途 |
+|---|---|
+| [`regulatory-reference-check`](skills/regulatory-reference-check/SKILL.md) | 检查制度文件中的法规及内部文件引用 |
+| [`responsibility-audit`](skills/responsibility-audit/SKILL.md) | 审计部门、岗位职责及二者之间的映射关系 |
+
+> **🚀 Demo：** [查看完整执行案例](docs/demo.md)
+
+---
+
 ## Why This Project
 
-Most "AI audit" tools fail at the architecture level: they ask a model to
-generate answers in one shot, with no extraction, classification, verification,
-issue-recording, or human-review stages. The result is hallucinated conclusions
-that look authoritative but cannot survive scrutiny.
+Conventional AI audit attempts tend to stop at a single-round prompt or simple
+text comparison, which makes it difficult to cover a complete review workflow.
+Without explicit extraction, classification, verification, issue-recording, and
+human-review stages, the output may look authoritative but is hard to examine,
+trace, or defend under review.
 
 This project demonstrates an alternative architecture:
 
@@ -72,7 +84,9 @@ other audit and review scenarios.
 **Standardized Reference Document Verification**
 
 Inspects the reference list of a corporate policy / standard / regulation
-document and detects five issue categories:
+document and detects five **reference-validity** issue categories
+(scope: citation checking only — independent of the seven responsibility
+categories used by `responsibility-audit` below):
 
 | # | Issue | Meaning |
 |---|-------|---------|
@@ -98,7 +112,8 @@ See [`skills/regulatory-reference-check/SKILL.md`](skills/regulatory-reference-c
 **Department ↔ Position Responsibility Bidirectional Audit (Three-Step Method)**
 
 Cross-checks department-level responsibility descriptions against
-position-level (job) responsibility descriptions to expose seven issue categories:
+position-level (job) responsibility descriptions to expose seven
+**responsibility** issue categories:
 
 | # | Issue | Direction |
 |---|-------|-----------|
@@ -118,6 +133,35 @@ Workflow is strictly per-department, three steps:
 Each step pauses for human confirmation before proceeding to the next.
 
 See [`skills/responsibility-audit/SKILL.md`](skills/responsibility-audit/SKILL.md).
+
+---
+
+## 🚀 Demo
+
+通过一个完整的模拟案例，展示 AI Audit Skills 如何完成：
+
+**输入 → 提取 → 分类 → 验证 → 问题发现 → 人工确认 → 结构化输出**
+
+👉 [查看完整 Demo](docs/demo.md)
+
+The Demo contains two end-to-end runs:
+
+| Demo | Skill | What it shows |
+|------|-------|---------------|
+| **Demo A** | `regulatory-reference-check` | Synthetic policy text → reference extraction → **Gate 1 (extraction complete)** → A/B/C/D/E/S classification → external 4-query / internal 4-step verification → 4 candidate issues → **Gate 2 (3 confirmed + 1 rejected, incl. a rejection example)** → structured output |
+| **Demo B** | `responsibility-audit` | The three-step method: department review → position review → bidirectional cross-check, with coverage statistics |
+
+Each Demo is structured around five layers, so a reviewer can see not just
+*what* the Skill outputs, but *why*:
+
+```text
+Business Problem → AI Workflow → Rule-based Verification
+        → Human Confirmation → Structured Output
+```
+
+> All Demo content is **synthetic**, labeled
+> `Illustrative Example / Synthetic Data`. It demonstrates method and
+> workflow — it does not publish business data.
 
 ---
 
@@ -205,14 +249,19 @@ real, and which fix language to adopt**.
 
 ---
 
-## Example
+## Quick Examples
 
-The `examples/` directory of each Skill contains:
+Each Skill ships a **minimal** runnable example in its own `examples/` directory:
 
 - `example_input.md` — a synthetic short policy / department table, clearly
   labeled as illustrative.
 - `example_output.md` — the expected issue list the Skill would produce, also
   synthetic.
+
+Use these to sanity-check a Skill in one pass.
+
+For the **full end-to-end walkthrough** — including the verification reasoning
+chain and the human confirmation gate — see the [Demo](docs/demo.md).
 
 > All examples in this repository are **Illustrative Example / Synthetic Data**.
 > They do not represent any real organization.
@@ -243,7 +292,8 @@ ai-audit-skills/
 │           └── example_output.md
 │
 └── docs/
-    └── methodology.md
+    ├── methodology.md
+    └── demo.md          ← 完整端到端案例 Demo
 ```
 
 ---
