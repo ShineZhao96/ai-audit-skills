@@ -1,5 +1,11 @@
 # AI Audit Skills
 
+> **这是什么**：企业制度里的法规引用经常过期、错名、已废止，部门与岗位职责也常出现缺失、重叠、层级错配。人工逐条比对成本高、漏检风险大。
+>
+> **怎么做**：把「提取 → 分类 → 规则校验 → 人工确认 → 结构化输出」固化成可复用的 Agent Skill，校验规则显式可查，不依赖模型“觉得对”。
+>
+> **产出什么**：两类问题清单（引用有效性 5 类、职责审计 7 类）和可直接进入底稿的结构化报告；每个 Skill 在给出结论前强制暂停，等待人工确认。
+
 > **Reusable AI Agent Skills for Compliance Review and Organizational Responsibility Audit**
 
 A collection of reusable AI Agent Skills abstracted from real-world enterprise
@@ -133,6 +139,26 @@ Workflow is strictly per-department, three steps:
 Each step pauses for human confirmation before proceeding to the next.
 
 See [`skills/responsibility-audit/SKILL.md`](skills/responsibility-audit/SKILL.md).
+
+---
+
+## Field Usage (Desensitized)
+
+- **Context**: internal-control review at the procurement center of an energy
+  group — policy inventory, contract and ledger compliance checks; roughly two
+  months (Jul–Aug 2026).
+- **What changed**: the "policy requirement ↔ responsibility list" comparison
+  moved from manual line-by-line reading to "Agent extracts elements and
+  citations → rules verify → human confirms".
+- **Three kinds of issues the human gate actually caught**:
+  1. Boundary cases the rules did not cover — the same matter falls under
+     different clauses depending on the procurement method.
+  2. The same wording meaning different things at department vs. position level;
+     the model tends to judge them as consistent.
+  3. Misjudging "abolished / superseded" — the cited document number exists, but
+     its validity status has already changed.
+- **Note**: `docs/demo.md` uses synthetic data. No real project material, policy
+  text, or client information is included in this repository.
 
 ---
 
@@ -330,6 +356,20 @@ ai-audit-skills/
 - **Language is bilingual-friendly.** The Skills are written with bilingual
   headings (Chinese + English). The Agent should answer in the user's
   language.
+
+---
+
+## Provenance
+
+The rules and Skills in this repository are desensitized from an internal-control
+consulting project the author took part in. Original project materials, policy
+texts, client and vendor information are not published; all examples in this
+repository are synthetic.
+
+Division of work: business-rule analysis came from the actual work in that
+internship; the abstraction into Skills, documentation, testing and iteration were
+done individually. This repository contains no code, documents or data belonging
+to any employer.
 
 ---
 
